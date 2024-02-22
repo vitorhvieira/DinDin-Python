@@ -1,26 +1,27 @@
 # API DinDin-Python
 
-Uma RESTful API desenvolvida oferece funcionalidades abrangentes para gerenciar usuários e transações. Os principais recursos incluem o cadastro e login de usuários, detalhes e edição do perfil do usuário logado, listagem de categorias e transações, além de operações específicas como cadastrar, editar, remover e detalhar transações. A API também suporta a obtenção de extrato de transações e a filtragem de transações por categoria. Essa abordagem permite uma integração eficaz em sistemas que exigem controle de usuários e registros de transações de forma flexível e segura.
+Uma RESTful API desenvolvida oferece funcionalidades abrangentes para gerenciar usuários e transações. Os principais recursos incluem o cadastro e login de usuários, detalhes e edição do perfil do usuário logado, listagem de categorias e transações, além de operações específicas como cadastrar, editar, remover e detalhar transações. A API também suporta a obtenção de extrato de transações. Essa abordagem permite uma integração eficaz em sistemas que exigem controle de usuários e registros de transações de forma flexível e segura.
 
 #### 🎲 Rodando o Backend
 
 ```bash
 # Clone este repositório
-$ git clone git@github.com:vitorhvieira/DinDin.git
+$ git clone git@github.com:vitorhvieira/DinDin-Python.git
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd DinDin
+$ cd DinDin-Python
+
+# Configurando o ambiente virtual
+$ python -m venv venv
+
+# Ativando o ambiente virtual
+$ venv\Scripts\activate
 
 # Instale as dependências
-$ npm install
+$ pip install -r requirements.txt
 
-# Execute a aplicação em modo de desenvolvimento
-$ npm run dev
-
-# O servidor inciará na porta:3000
-
-# Acesse o Swagger (Documentação da API) em
-GET http://localhost:3000
+# Executando a aplicação
+$ python app.py
 ```
 
 #### 🗃️ Variáveis de ambiente
@@ -29,7 +30,7 @@ Consulte as variáveis necessárias no arquivo .env.example, e atribua valores d
 
 ## **Banco de dados**
 
-Você precisa criar um Banco de Dados PostgreSQL chamado `dindin` contendo as seguintes tabelas e colunas:  
+Você precisa criar um Banco de Dados PostgreSQL chamado `dindin_python` contendo as seguintes tabelas e colunas:  
 **ATENÇÃO! Os nomes das tabelas e das colunas a serem criados devem seguir exatamente os nomes listados abaixo.**
 
 - usuarios
@@ -37,6 +38,9 @@ Você precisa criar um Banco de Dados PostgreSQL chamado `dindin` contendo as se
   - nome
   - email (campo único)
   - senha
+  - data_nascimento
+  - telefone
+  - cpf (campo único)
 - categorias
   - id
   - descricao
@@ -85,7 +89,9 @@ Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
 
   - nome 
   - email 
-  - senha 
+  - senha
+  - data_nascimento
+  - cpf 
 
 #### **Exemplo de requisição**
 
@@ -95,6 +101,8 @@ Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
     "nome": "José",
     "email": "jose@email.com",
     "senha": "123456"
+    "data_nascimento": "01/01/2001",
+    "cpf": "12345678912"
 }
 ```
 
@@ -135,9 +143,11 @@ Esse endpoint deverá atualizar os dados do usuário logado.
 
 - **Requisição** - O corpo (body) deverá possuir um objeto com todas as seguintes propriedades (respeitando estes nomes):
 
-  - nome
-  - email
+  - nome 
+  - email 
   - senha
+  - data_nascimento
+  - cpf
 
 #### **Exemplo de requisição**
 
@@ -147,6 +157,8 @@ Esse endpoint deverá atualizar os dados do usuário logado.
     "nome": "José de Abreu",
     "email": "jose_abreu@email.com",
     "senha": "j4321"
+    "data_nascimento": "02/02/2002"
+    "cpf": "98765432198"
 }
 ```
 
@@ -244,20 +256,6 @@ Essa é a rota que será chamada quando o usuario logado quiser excluir uma das 
 
 Essa é a rota que será chamada quando o usuario logado quiser obter o extrato de todas as suas transações cadastradas.
 
-### **Filtrar transações por categoria**
-
-Na funcionalidade de listagem de transações do usuário logado (**GET /transacao**), deveremos incluir um parâmetro do tipo query **filtro** para que seja possível consultar apenas transações das categorias informadas.
-
-- **Requisição**  
-  Parâmetro opcional do tipo query **filtro**.
-
-#### **Exemplo de requisição**
-
-```javascript
-// GET /transacao?filtro[]=roupas&filtro[]=salários
-// Sem conteúdo no corpo (body) da requisição
-```
-
 ---
 
 ## 💪 Como contribuir para o projeto
@@ -268,5 +266,3 @@ Na funcionalidade de listagem de transações do usuário logado (**GET /transac
 4. Envie as suas alterações: `git push origin my-feature`
 
 📱 [Entre em contato com o Vitor!](https://www.linkedin.com/in/vitorhvieira/)
-
-###### tags: `back-end` `nodeJS` `API REST` `desafio`
