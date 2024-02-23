@@ -29,6 +29,7 @@ class TransacoesModel(database.Model):
             "id": self.id,
             "tipo": self.tipo,
             "descricao": self.descricao,
+            "valor": self.valor,
             "data": self.data,
             "usuario_id": self.usuario_id,
             "categoria_id": self.categoria_id,

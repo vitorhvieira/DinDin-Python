@@ -7,7 +7,7 @@ from flask_restful import Api
 from resources.categorias import Categoria
 from resources.extrato import Extrato
 from resources.transacoes import Transacoes, Transacoes_com_id
-from resources.usuarios import LoginUsuario, RegistroUsuario, Usuario
+from resources.usuarios import LoginUsuario, Usuario
 
 dotenv.load_dotenv()
 
@@ -19,8 +19,7 @@ app.config['JWT_SECRET_KEY'] = os.getenv("SECRET_KEY")
 api = Api(app)
 jwt = JWTManager(app)
 
-api.add_resource(Usuario, "/usuario/<int:id>")
-api.add_resource(RegistroUsuario, "/cadastro")
+api.add_resource(Usuario, "/usuario/")
 api.add_resource(LoginUsuario, "/login")
 api.add_resource(Categoria, "/categoria")
 api.add_resource(Transacoes, "/transacao")

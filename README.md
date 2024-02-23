@@ -21,7 +21,7 @@ $ venv\Scripts\activate
 $ pip install -r requirements.txt
 
 # Executando a aplicação
-$ python app.py
+$ python src/app.py
 ```
 
 #### 🗃️ Variáveis de ambiente

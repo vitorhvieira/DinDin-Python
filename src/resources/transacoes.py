@@ -36,21 +36,24 @@ class Transacoes(Resource):
         transacoes = TransacoesModel.listar_transacao(usuario_id)
         if transacoes is not None:
             return [transacao.json() for transacao in transacoes], 200
-        return {"mensagem": "Nenhuma transação encontrada."}, 404
+        return {}, 200
 
     @jwt_required()
     def post(self):
         dados = atributos.parse_args()
         usuario_id = get_jwt_identity()
         dados["usuario_id"] = usuario_id
-        categoria = Categorias.procurar_por_id(dados["categoria_id"]).json()
+        categoria = Categorias.procurar_por_id(dados["categoria_id"])
+        if categoria is None:
+            return {"mensagem": f"A Categoria com id {dados["categoria_id"]} não foi encontrada!"}, 404
         transacao = TransacoesModel(**dados)
         try:
             transacao.salvar_transacao()
         except Exception:
             transacao.deletar_transacao()
             return {"mensagem": "Houve algum erro interno do servidor"}, 500
-        return {**transacao.json(), "categoria_nome": categoria["descricao"]}, 201
+        
+        return {**transacao.json(), "categoria_nome": categoria.json()["descricao"]}, 201
 
 
 class Transacoes_com_id(Resource):
@@ -58,7 +61,7 @@ class Transacoes_com_id(Resource):
     def get(self, id):
         usuario_id = get_jwt_identity()
         transacao = TransacoesModel.procurar_transacao(id)
-        if transacao:
+        if transacao is not None:
             if transacao.json()["usuario_id"] == usuario_id:
                 return transacao.json(), 200
             return {"mensagem": "Transação não pertence ao usuario!"}, 403
@@ -69,15 +72,15 @@ class Transacoes_com_id(Resource):
         dados = atributos.parse_args()
         usuario_id = get_jwt_identity()
 
-        if not Categorias.procurar_por_id(dados["categoria_id"]):
+        if Categorias.procurar_por_id(dados["categoria_id"]) is None:
             return {"mensagem": f"A Categoria com id {dados["categoria_id"]} não foi encontrada!"}, 404
 
         transacao = TransacoesModel.procurar_transacao(id)
 
-        if not transacao:
+        if transacao is None:
             return {"mensagem": f"A transação {transacao} não foi encontrada!"}, 404
 
-        if transacao:
+        if transacao is not None:
             if transacao.json()["usuario_id"] == usuario_id:
                 try:
                     transacao.atualizar_transacao(**dados)
@@ -92,7 +95,7 @@ class Transacoes_com_id(Resource):
     def delete(self, id):
         usuario_id = get_jwt_identity()
         transacao = TransacoesModel.procurar_transacao(id)
-        if transacao:
+        if transacao is not None:
             if transacao.json()["usuario_id"] == usuario_id:
                 try:
                     transacao.deletar_transacao()
